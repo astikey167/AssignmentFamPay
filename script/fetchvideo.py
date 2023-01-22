@@ -8,9 +8,9 @@ import mysql.connector
 WAIT_TIME=10
 QUERY="CRICKET"
 PAGES_MAX=5
-API_TOKN="AIzaSyDD_WAlEwteYjUno5P9Gr_34QReFEDOl9o"
+API_TOKN=""
 CLIENT_ID="553581124539-giiet56h3njespipm4j5tn05rvqp9g96.apps.googleusercontent.com"
-CLIENT_PWD="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"
+CLIENT_PWD=""
 MYSQL_HOST = "127.0.0.1"
 MYSQL_USER= "root"
 MYSQL_PASSWORD= "mariadb"
