@@ -1,0 +1,8 @@
+FROM python:3.10.2-alpine3.14
+RUN apk update
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache -r requirements.txt
+COPY . .
+RUN chmod +x ./entrypoint.sh
+ENTRYPOINT ["sh", "entrypoint.sh"]
