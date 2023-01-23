@@ -5,13 +5,17 @@ import sys, jwt, yaml
 import mysql.connector
 from flask_cors import CORS
 from functools import wraps
+from dateutil import parser
 app = Flask(__name__)
 api = Api(app)
 CORS(app, resources={r'/*': {'origins': '*'}})
-MYSQL_HOST = "127.0.0.1"
-MYSQL_USER= "root"
-MYSQL_PASSWORD= "mariadb"
-MYSQL_DB = "start"
+with open("./script/config.json",'a') as f :     #loading variables from config.json
+    data=json.loads(f)
+
+MYSQL_HOST =data["MYSQL_HOST"]
+MYSQL_USER= data["MYSQL_USER"]
+MYSQL_PASSWORD= data["MYSQL_PASSWORD"]
+MYSQL_DB = data["MYSQL_DB"]
 
 class DBOps :
     def __init__(self):
@@ -38,6 +42,18 @@ class DBOps :
         
         return response
 
+    def get_all_data(self):
+        query="SELECT * FROM VID2"
+        create_cursor = self.dataBase.cursor()
+        create_cursor.execute(query)
+        response=[]
+        for x in create_cursor:
+            response.append({"tag":x[0],"title":x[1],"DESCRIPTION":x[2],"UploadTime":x[3],"ThumbnailUrl":x[4],"ChannelName":x[5]})
+        
+        response.sort(key=lambda val: parser.parse(val["UploadTime"]))
+        return response
+
+
 db_operations=DBOps()
 
 class SearchVideo(Resource) :
@@ -52,8 +68,15 @@ class SearchVideo(Resource) :
                 description=request.headers['description']
                 return db_operations.get_video_description(description)
 
+class FetchVideo(Resource) :
+    def get(self):
+        data=request.headers
+        content_type = data.get('Content-Type')
+        if (content_type == 'application/json'):
+            return db_operations.get_all_data()
 
 api.add_resource(SearchVideo,"/api/v1/search")
+api.add_resource(FetchVideo,"/api/v1/fetch/all")
 
 if __name__ == '__main__':
     app.run()
