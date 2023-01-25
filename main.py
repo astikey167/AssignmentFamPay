@@ -79,4 +79,4 @@ api.add_resource(SearchVideo,"/api/v1/search")
 api.add_resource(FetchVideo,"/api/v1/fetch/all")
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=3001)
